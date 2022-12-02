@@ -8,8 +8,6 @@ from opros.models import *
 
 def index(request):
     pass
-    question = Question.objects.all()
-    answer = Answer.objects.all()
     keys = []
     dict_question = {}
     while range(10):
@@ -23,8 +21,8 @@ def index(request):
             continue
 
     for item in keys:
-        dict_question = question.select_related('quiz').filter(id=item) + answer.select_related('question').filter(question_id=item)
+        dict_question = Question.objects.select_related('quiz').filter(id=item) + Answer.objects.select_related('question').filter(question_id=item)
 
     print(dict_question)
     
-    return render(request, 'opros/index.html', {'questions': dict_question})
+    return render(request, 'opros/index.html', {'questions': question})
