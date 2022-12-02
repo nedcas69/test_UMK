@@ -25,4 +25,4 @@ def index(request):
 
     print(dict_question)
     
-    return render(request, 'opros/index.html', {'questions': question})
+    return render(request, 'opros/index.html', {'questions': dict_question})
