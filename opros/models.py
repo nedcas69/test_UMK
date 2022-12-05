@@ -64,3 +64,6 @@ class UserInput(models.Model):
     user_name = CharField('ФИО', max_length=250,)
     user_number = IntegerField('Табельный номер', blank=True)
     result = BooleanField('Результат', default=False)
+
+    def __str__(self):
+        return self.user_name

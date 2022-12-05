@@ -1,0 +1,11 @@
+{% extends 'opros/base.html' %}
+
+{% block content %}
+
+{% for item in quiz %}
+<a class="btn btn-primary" href="user_auth/{{ item.id }}" role="button">
+    {{ item.title }}
+</a>
+{% endfor %}
+
+{% endblock %}
