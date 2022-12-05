@@ -27,7 +27,6 @@ def index(request, quiz_id):
         ans = Answer.objects.select_related('question').filter(question_id=item)
         questions[ques] = ans
 
-    print(questions)
     print(keys)
     
     return render(request, 'opros/index.html', {'questions': questions})
