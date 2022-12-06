@@ -20,8 +20,6 @@ class Answer(models.Model):
 class Question(models.Model):
     quiz = ForeignKey('Quiz', on_delete=CASCADE, verbose_name='тест',)
     question = CharField('вопрос', max_length=150,)
-    full_text = TextField('описание вопроса',blank=True,)
-    image = ImageField('изображение',upload_to='quiz/%Y/',blank=True,)
 
     def __str__(self):
         return self.question[:50]
@@ -67,3 +65,11 @@ class UserInput(models.Model):
 
     def __str__(self):
         return self.user_name
+
+
+class Results(models.Model):
+    user_results = BooleanField('Результат', default=False)
+    user_input = OneToOneField('UserInput', on_delete=CASCADE)
+    
+    def __str__(self):
+        return self.user_input

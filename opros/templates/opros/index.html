@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="container">
-        <form action=" " method="post">
+        <form action="{% url 'results' %}" method="post">
             {% csrf_token %} 
         {% for key, value in questions.items %}
         {% comment %} {{ key }} {{ value }} {% endcomment %}

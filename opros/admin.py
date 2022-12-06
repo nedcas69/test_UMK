@@ -28,4 +28,11 @@ class QuizModelAdmin(ModelAdmin):
     }
     save_on_top = True
 
+@register(Results)
+class ResultsModelAdmin(ModelAdmin):
+    list_display_links = ('id', 'user_input')
+    list_display = ('id','user_input', 'user_results')
+    list_filter = ( 'user_input', 'user_results' )
+    save_on_top = True
+    
 admin.site.register(UserInput)

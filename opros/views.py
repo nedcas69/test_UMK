@@ -7,7 +7,7 @@ from opros.forms import UserInputForm
 from opros.models import *
 
 
-def index(request, quiz_id):
+def index(request, quiz_id, user_id):
     keys = []
     i = 0
     questions = {}
@@ -29,7 +29,34 @@ def index(request, quiz_id):
 
     print(keys)
     
-    return render(request, 'opros/index.html', {'questions': questions})
+    u_id = UserInput.objects.latest('id')
+    user_id = u_id.id
+    vars = {}
+    result_i = 0
+    for item in keys:
+        if str(item) in request.POST:    
+            if request.method == "POST":
+                vars = request.POST[f'{item}']
+                for item in ans:
+                    if item.is_correct:
+                        if vars == item.answer:
+                            result_i += 1
+                        else:
+                            None    
+
+                if result_i > 7:
+                    user = UserInput.objects.filter(pk=user_id).update(result = True)
+                else:
+                    None
+            else:
+                None
+        else:
+            None
+
+
+    print(vars)
+
+    return render(request, 'opros/index.html', {'questions': questions, 'user_id': user_id})
 
 
 def categories(request):
@@ -38,18 +65,24 @@ def categories(request):
     return render(request, 'opros/categories.html', {'quiz': quiz})
 
 def user_auth(request, quiz_id):
+    u_i = UserInput.objects.latest('id')
     if request.method == 'POST':
         form = UserInputForm(request.POST)
         if form.is_valid():
+            question = Question.objects.all()
             user_input = form.save()
-            return redirect(f'http://127.0.0.1:8000/questions/{quiz_id}')
+            return redirect(f'http://127.0.0.1:8000/questions/{quiz_id}/{u_i.id}/')
     else:
         form = UserInputForm()
-    return render(request, 'opros/user_auth.html', {'form': form, 'quiz_id': quiz_id})
+    return render(request, 'opros/user_auth.html', {'form': form, 'quiz_id': quiz_id })
 
-def results(request):
-    user_input = UserInput.objects.all()
-    if request.method == 'POST':
-        pass
-    else:
-        pass
+def results(request, id):
+    user_input = UserInput.objects.filter(pk=id)
+    for item in user_input:
+        if item.is_correct:
+            user_input = 'Вы прошли!!!'
+        else:
+            user_input = 'Вы не прошли.'
+
+    return render(request, 'opros/results.html', {'user_input': user_input, 'id':id})
+    
