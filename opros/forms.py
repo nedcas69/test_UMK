@@ -19,3 +19,7 @@ class UserInputForm(forms.ModelForm):
         if re.match(r'\d', title):
             raise ValidationError('ФИО не должно начинаться с цифры')
         return title
+
+# class UserResultForm(forms.ModelForm):
+#     class Meta:
+#         model = UserInput

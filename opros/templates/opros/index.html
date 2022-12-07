@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="container">
-        <form action="{% url 'results' %}" method="post">
+        <form action="/results/{{user_id}}" method="post">
             {% csrf_token %} 
         {% for key, value in questions.items %}
         {% comment %} {{ key }} {{ value }} {% endcomment %}
@@ -13,7 +13,7 @@
                  {{ item.question }}</h3> 
                     {% for item in value %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="{{ item.question_id }}">
+                        <input class="form-check-input" type="radio" name="{{ item.question_id }}" value="{{ item.is_correct }}">
                         <label class="form-check-label" for="flexRadioDefault1">
                         
                             {{ item.answer }}

@@ -34,5 +34,11 @@ class ResultsModelAdmin(ModelAdmin):
     list_display = ('id','user_input', 'user_results')
     list_filter = ( 'user_input', 'user_results' )
     save_on_top = True
+
+@register(UserInput)
+class UserInputModelAdmin(ModelAdmin):
+    list_display_links = ('id', 'user_name')
+    list_display = ('id', 'result','user_name', 'user_number')
+    list_filter = ('result',)
+    save_on_top = True
     
-admin.site.register(UserInput)
