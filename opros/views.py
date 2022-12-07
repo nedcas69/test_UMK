@@ -6,8 +6,9 @@ from opros.forms import UserInputForm
 
 from opros.models import *
 
+
 keyz = []
-print(keyz)
+
 def index(request, quiz_id, user_id):
     
     i = 0
@@ -28,45 +29,10 @@ def index(request, quiz_id, user_id):
         ans = Answer.objects.select_related('question').filter(question_id=item)
         questions[ques] = ans
 
-    
-    
-    
     u_id = UserInput.objects.latest('id')
     user_id = u_id.id
-    # vars = {}
-    # result_i = 0
-    # for item in keys:
-    #     # if str(item) in request.POST:    
-    #         if request.method == "POST":
-    #             vars[item] =  request.POST.get(f'{item}')
-                
-    #             # for item in ans:
-    #             #     if item.is_correct:
-    #             #         if vars == item.answer:
-    #             #             result_i += 1
-    #             #         else:
-    #             #             None    
-
-                
-    #         else:
-    #             None
-    #     # else:
-    #     #     None
-    # for key,value in vars.items(): 
-    #     if value == 'True':
-    #         print(value)
-    #         result_i += 1
-
-    # print(result_i)
-    # if result_i > 7:
-    #     UserInput.objects.filter(pk=user_id).update(result = True)
-                    
-    # else:
-    #     None
-
-    # print(vars)
-    # form = UserResultForm(request.POST)
-    return render(request, 'opros/index.html', {'questions': questions, 'user_id': user_id, 'keyz':keyz})
+    
+    return render(request, 'opros/index.html', {'questions': questions, 'user_id': user_id,})
 
 def categories(request):
     quiz = Quiz.objects.all()
@@ -75,12 +41,13 @@ def categories(request):
 
 def user_auth(request, quiz_id):
     u_i = UserInput.objects.latest('id')
+    u_i = u_i.id + 1
     if request.method == 'POST':
         form = UserInputForm(request.POST)
         if form.is_valid():
             question = Question.objects.all()
             user_input = form.save()
-            return redirect(f'http://127.0.0.1:8000/questions/{quiz_id}/{u_i.id}/')
+            return redirect(f'http://127.0.0.1:8000/questions/{quiz_id}/{u_i}/')
     else:
         form = UserInputForm()
     return render(request, 'opros/user_auth.html', {'form': form, 'quiz_id': quiz_id })
@@ -96,30 +63,30 @@ def results(request,user_id):
                 vars[item] =  request.POST.get(f'{item}')
                 is_correct[item] = Answer.objects.filter(question_id = item, is_correct = True)
             else:
-                None
-        
+                None        
+
     for key,value in vars.items(): 
-        if value == 'True':
-            print(value)
+        val = f'<QuerySet [<Answer: {value}>]>'
+        is_corr = str(is_correct[key])
+        if val == is_corr:
             result_i += 1
 
-    print(result_i)
     if result_i > 7:
         UserInput.objects.filter(pk=user_id).update(result = True)
                     
     else:
         None
 
-    print(vars)
-
+    print(result_i)
 
     user_input = UserInput.objects.filter(pk=user_id)
     template_name = 'opros/results.html'
     for item in user_input:
         if item.result:
-            user_input = 'Вы прошли!!!'
+            user_result = 'Вы прошли!!!'
         else:
-            user_input = 'Вы не прошли.'
+            user_result = 'Вы не прошли.'
+
     keyz.clear()
-    return render(request, 'opros/results.html', {'user_input': user_input, 'user_id':user_id})
+    return render(request, 'opros/results.html', {'user_result': user_result,'user_input': user_input, 'user_id':user_id})
     

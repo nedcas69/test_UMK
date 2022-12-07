@@ -7,13 +7,13 @@
             {% csrf_token %} 
         {% for key, value in questions.items %}
         {% comment %} {{ key }} {{ value }} {% endcomment %}
-        <h3>{{ forloop.counter }}
+        <h3>{{ forloop.counter }}.
         {% for item in key %}
             
                  {{ item.question }}</h3> 
                     {% for item in value %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="{{ item.question_id }}" value="{{ item.is_correct }}">
+                        <input class="form-check-input" type="radio" name="{{ item.question_id }}" value="{{ item.answer }}">
                         <label class="form-check-label" for="flexRadioDefault1">
                         
                             {{ item.answer }}
