@@ -27,6 +27,9 @@ class QuizModelAdmin(ModelAdmin):
         'slug': ('title',)
     }
     save_on_top = True
+    list_display_links = ('id', 'title')
+    list_display = ('id','title', )
+
 
 @register(Results)
 class ResultsModelAdmin(ModelAdmin):

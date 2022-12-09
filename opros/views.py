@@ -9,15 +9,28 @@ from opros.models import *
 
 keyz = []
 
-def index(request, quiz_id):
+def index(request, quiz_slug):
     if request.method == 'POST':
         user_name = request.POST['user_name']
+        form = UserInputForm(request.POST)
+        if form.is_valid():
+            # question = Question.objects.all()
+            user_input = form.save()
+    else:
+        return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_slug}/')
 
     i = 0
     questions = {}
+    quiz = Quiz.objects.filter(slug=quiz_slug).last()
+    quizid = quiz.id
+    ques_first = Question.objects.filter(quiz_id=quizid).first()
+    ques_first = int(ques_first.id)
+    ques_last = Question.objects.filter(quiz_id=quizid).last()
+    ques_last = int(ques_last.id)
+
     while i < 10:
-        key = random.randint(1,Question.objects.filter(quiz_id = quiz_id).count())
-        if Question.objects.filter(id=key, quiz_id = quiz_id):
+        key = random.randint(ques_first, ques_last)
+        if Question.objects.filter(id=key, quiz_id = quizid):
             if key not in keyz:
                 keyz.append(key)
                 i += 1
@@ -31,33 +44,29 @@ def index(request, quiz_id):
         ans = Answer.objects.select_related('question').filter(question_id=item)
         questions[ques] = ans
     
-    return render(request, 'opros/index.html', {'questions': questions, 'user_name': user_name, 'quiz_id':quiz_id })
+    return render(request, 'opros/index.html', {'questions': questions, 'user_name': user_name, 'quiz_slug': quiz_slug })
 
 def categories(request):
     quiz = Quiz.objects.all()   
     return  render(request, 'opros/categories.html', {'quiz': quiz})
 
-def user_auth(request, quiz_id):
+def user_auth(request, quiz_slug):
     # u_i = UserInput.objects.latest('id')
     # u_i = u_i.id + 1
     if request.method == 'POST':
         form = UserInputForm(request.POST)
-        if form.is_valid():
-            # question = Question.objects.all()
-            user_input = form.save()
-            # return redirect(f'http://127.0.0.1:8000/questions/{quiz_id}/{u_i}/')
     else:
         form = UserInputForm()
-    return render(request, 'opros/user_auth.html', {'form': form, 'quiz_id': quiz_id })
+    return render(request, 'opros/user_auth.html', {'form': form, 'quiz_slug': quiz_slug })
 
-def results(request, quiz_id):
+def results(request, quiz_slug):
     if request.method == "POST":
         user_name = request.POST['user_name']
         users = UserInput.objects.filter(user_name = user_name).last()
         user_id = users.id
 
     else:
-        return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_id}//')
+        return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_slug}//')
       
     vars = {}
     is_correct = {}

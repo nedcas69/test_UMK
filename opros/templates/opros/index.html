@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="container">
-        <form action="/results/{{ quiz_id }}/" method="post">
+        <form action="/results/{{ quiz_slug }}/" method="post">
             {% csrf_token %} 
             <input type="text" readonly name="user_name" class="form-control-plaintext" id="user_name" value="{{ user_name }}"><br><br>
         {% for key, value in questions.items %}

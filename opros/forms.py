@@ -15,10 +15,10 @@ class UserInputForm(forms.ModelForm):
         }
 
     def clean_title(self):
-        title = self.cleaned_data['title']
-        if re.match(r'\d', title):
+        user_name = self.cleaned_data['user_name']
+        if re.match(r'\d', user_name):
             raise ValidationError('ФИО не должно начинаться с цифры')
-        return title
+        return user_name
 
 # class UserResultForm(forms.ModelForm):
 #     class Meta:
