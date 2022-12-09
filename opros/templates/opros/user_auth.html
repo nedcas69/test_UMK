@@ -12,7 +12,7 @@
 
 <h1>Регистрация</h1>
 
-<form action="" method="post">
+<form action="/questions/{{ quiz_id }}/" method="post">
     {% csrf_token %}
 
     {{ form.as_p }}
