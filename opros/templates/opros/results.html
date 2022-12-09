@@ -3,11 +3,15 @@
 {% block content %}
 
 <h1> {{user_result}} </h1>
+
+<h3>Вы нашли {{ result_i }} из 10</h3>
 {% for item in user_input %}
 <h3>ФИО: {{ item.user_name }}</h3>
     {% if item.user_number %}
     <h3>Табельный номер: {{ item.user_number }}</h3>
     {% endif%}
 {% endfor %}
-
+{% for item in questions_results %}
+    <h4> {{ item }} </h4>
+{% endfor %}
 {% endblock %}

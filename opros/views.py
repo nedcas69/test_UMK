@@ -64,31 +64,37 @@ def results(request, quiz_slug):
         user_name = request.POST['user_name']
         users = UserInput.objects.filter(user_name = user_name).last()
         user_id = users.id
-
     else:
         return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_slug}//')
       
     vars = {}
+    questions_results = []
     is_correct = {}
     result_i = 0
     for item in keyz:   
             if request.method == "POST":
                 vars[item] =  request.POST.get(f'{item}')
-                is_correct[item] = Answer.objects.filter(question_id = item, is_correct = True)
-            else:
-                None        
+                is_correct[item] = Answer.objects.filter(question_id = item, is_correct = True)       
 
     for key,value in vars.items(): 
         val = f'<QuerySet [<Answer: {value}>]>'
         is_corr = str(is_correct[key])
         if val == is_corr:
             result_i += 1
+            good = str(value) + '  +++'
+            questions_results.append(good)
+
+        else:
+            bad = str(value) + '  X'
+            questions_results.append(bad)
+
+
 
     if result_i > 7:
         UserInput.objects.filter(pk=user_id).update(result = True)
                     
     else:
-        None
+        UserInput.objects.filter(pk=user_id).update(result = False)
 
     print(result_i)
 
@@ -102,5 +108,5 @@ def results(request, quiz_slug):
             user_result = 'Вы не прошли.'
 
     keyz.clear()
-    return render(request, 'opros/results.html', {'user_result': user_result,'user_input': user_input, 'user_id':user_id})
+    return render(request, 'opros/results.html', {'user_result': user_result,'user_input': user_input, 'user_id':user_id, 'result_i': result_i, 'questions_results': questions_results})
     
