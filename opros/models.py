@@ -60,6 +60,7 @@ class Quiz(models.Model):
 
 class UserInput(models.Model):
     user_name = CharField('ФИО', max_length=250,)
+    random_list = CharField('random list', max_length=250, blank=True)
     user_number = IntegerField('Табельный номер', blank=True)
     result = BooleanField('Результат', default=False)
 
