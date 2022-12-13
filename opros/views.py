@@ -51,7 +51,7 @@ def index(request, quiz_slug):
         ques = Question.objects.select_related('quiz').filter(id=item)
         ans = Answer.objects.select_related('question').filter(question_id=item)
         questions[ques] = ans
-    print(keyz)
+    
     return render(request, 'opros/index.html', {'questions': questions, 'user_name': user_name, 'quiz_slug': quiz_slug })
 
 def categories(request):
@@ -125,5 +125,7 @@ def results(request, quiz_slug):
         else:
             user_result = 'Вы не прошли.'
     keyz.clear()
+    UserInput.objects.filter(pk=user_id).update(random_list = keyz)
+
     return render(request, 'opros/results.html', {'user_result': user_result,'user_input': user_input, 'user_id':user_id, 'result_i': result_i, 'questions_results': questions_results})
     
