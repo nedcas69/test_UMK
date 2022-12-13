@@ -98,11 +98,13 @@ def results(request, quiz_slug):
         is_corr = str(is_correct[key])
         if val == is_corr:
             result_i += 1
-            good = str(value) + '  +++'
+            ques = Question.objects.get(id=key)
+            good = str(ques.question) + '-----------  +++'
             questions_results.append(good)
 
         else:
-            bad = str(value) + '  X'
+            ques = Question.objects.get(id=key)
+            bad = str(ques.question) + '-------------  X'
             questions_results.append(bad)
 
 
