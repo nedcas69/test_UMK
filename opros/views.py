@@ -7,7 +7,7 @@ from opros.forms import UserInputForm
 from opros.models import *
 
 
-keyz = []
+
 
 def index(request, quiz_slug):
     if request.method == 'POST':
@@ -18,7 +18,7 @@ def index(request, quiz_slug):
             user_input = form.save()
     else:
         return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_slug}/')
-
+    keyz = []
     i = 0
     questions = {}
     quiz = Quiz.objects.filter(slug=quiz_slug).last()
@@ -39,11 +39,18 @@ def index(request, quiz_slug):
         else:
             continue
 
+    if request.method == "POST":
+        user_name = request.POST['user_name']
+        users = UserInput.objects.filter(user_name = user_name).last()
+        user_id = users.id
+        UserInput.objects.filter(pk=user_id).update(random_list = keyz)
+
+
     for item in keyz:
         ques = Question.objects.select_related('quiz').filter(id=item)
         ans = Answer.objects.select_related('question').filter(question_id=item)
         questions[ques] = ans
-    
+    print(keyz)
     return render(request, 'opros/index.html', {'questions': questions, 'user_name': user_name, 'quiz_slug': quiz_slug })
 
 def categories(request):
@@ -60,17 +67,23 @@ def user_auth(request, quiz_slug):
     return render(request, 'opros/user_auth.html', {'form': form, 'quiz_slug': quiz_slug })
 
 def results(request, quiz_slug):
+    
     if request.method == "POST":
         user_name = request.POST['user_name']
         users = UserInput.objects.filter(user_name = user_name).last()
         user_id = users.id
     else:
         return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_slug}//')
-      
+    rand_list = (users.random_list)  
+    rand_list = rand_list.replace(str,list)
     vars = {}
     questions_results = []
     is_correct = {}
     result_i = 0
+    keyz = []
+    for item in rand_list:
+        print(item)
+        
     for item in keyz:   
             if request.method == "POST":
                 vars[item] =  request.POST.get(f'{item}')
@@ -107,6 +120,5 @@ def results(request, quiz_slug):
         else:
             user_result = 'Вы не прошли.'
 
-    keyz.clear()
     return render(request, 'opros/results.html', {'user_result': user_result,'user_input': user_input, 'user_id':user_id, 'result_i': result_i, 'questions_results': questions_results})
     
