@@ -1,4 +1,5 @@
 import random
+import re
 from django.shortcuts import render, get_object_or_404, redirect
 # from django.views.generic import ListView, DetailView, CreateView
 from django.urls import reverse_lazy, reverse
@@ -75,15 +76,18 @@ def results(request, quiz_slug):
     else:
         return redirect(f'http://127.0.0.1:8000/user_auth/{quiz_slug}//')
     rand_list = (users.random_list)  
-    rand_list = rand_list.replace(str,list)
+    rand_list = str(rand_list)
     vars = {}
     questions_results = []
     is_correct = {}
     result_i = 0
     keyz = []
-    for item in rand_list:
-        print(item)
-        
+    for item in rand_list.split():
+        x = re.findall(r'\d+', item)
+        for item in x:
+            keyz.append(item)
+            
+
     for item in keyz:   
             if request.method == "POST":
                 vars[item] =  request.POST.get(f'{item}')
@@ -110,6 +114,7 @@ def results(request, quiz_slug):
         UserInput.objects.filter(pk=user_id).update(result = False)
 
     print(result_i)
+    print(keyz)
 
     user_input = UserInput.objects.filter(pk=user_id)
     template_name = 'opros/results.html'
@@ -119,6 +124,6 @@ def results(request, quiz_slug):
             user_result = 'Вы прошли!!!'
         else:
             user_result = 'Вы не прошли.'
-
+    keyz.clear()
     return render(request, 'opros/results.html', {'user_result': user_result,'user_input': user_input, 'user_id':user_id, 'result_i': result_i, 'questions_results': questions_results})
     

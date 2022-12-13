@@ -1,4 +1,5 @@
 import random
+import re
 
 
 keys = []
@@ -17,3 +18,10 @@ while i < 10:
         #     continue
 
 print(keys)
+
+keyz = str(keys)
+
+for item in keyz.split():
+    x = re.findall(r'\d+', item)
+    for item in x:
+        print(item)
